@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .country {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .country img {
+      width: 30px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="countries-container"></div>
+
+  <script>
+    fetch("https://restcountries.com/v3.1/all")
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to retrieve country data.");
+        }
+      })
+      .then(countries => {
+        // Get the container element
+        const container = document.getElementById("countries-container");
+
+        // Iterate over each country
+        countries.forEach(country => {
+          // Extract the required information
+          const name = country.name.official;
+          const region = country.region;
+          const subregion = country.subregion;
+          const flag = country.flags[0];
+
+          // Create a new country element
+          const countryElement = document.createElement("div");
+          countryElement.classList.add("country");
+
+          // Create an image element for the flag
+          const flagElement = document.createElement("img");
+          flagElement.src = flag;
+
+          // Create a paragraph element for the country information
+          const infoElement = document.createElement("p");
+          infoElement.textContent = `Name: ${name}\nRegion: ${region}\nSubregion: ${subregion}`;
+
+          // Append the flag and information elements to the country element
+          countryElement.appendChild(flagElement);
+          countryElement.appendChild(infoElement);
+
+          // Append the country element to the container
+          container.appendChild(countryElement);
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+</body>
+</html>
